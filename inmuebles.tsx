@@ -41,3 +41,20 @@ export async function getInmuebles() {
     return [];
   }
 }
+
+export async function createInmueble(inmueble: any) {
+  try {
+    const INMUEBLES_URL = 'http://10.0.2.2:3000/inmueble/add/';
+    const response = await fetch(INMUEBLES_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(inmueble),
+    });
+    return response;
+  } catch (error) {
+    console.error('Error creando el inmueble: ', error);
+    throw error;
+  }
+}
