@@ -1,7 +1,33 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {Alert, Button, StyleSheet, Text, View} from 'react-native';
 import {InmuebleCardProps} from '../interfaces/InmuebleCardProps.interface';
+import { deleteInmueble } from '../inmuebles';
 
-export function InmuebleCard({inmueble}: InmuebleCardProps) {
+export function InmuebleCard({inmueble, reloadInmuebles}: InmuebleCardProps & {reloadInmuebles: () => void}) {
+  const handleDelete = () => {
+    Alert.alert(
+      'Confirmar eliminación',
+      '¿Estás seguro de que querés eliminar este inmueble?',
+      [
+        {text: 'Cancelar', style: 'cancel'},
+        {text: 'Eliminar', style: 'destructive', onPress: async () => {
+          try {
+            const response = await deleteInmueble(inmueble.id_inmueble);
+            if (response.ok) {
+              Alert.alert('Éxito', 'Inmueble eliminado correctamente');
+              reloadInmuebles();
+            } else {
+              console.log(response);
+              console.log('-------SEPARATOR----------');
+              Alert.alert('Error', 'No se pudo eliminar el inmueble');
+            }
+          } catch (error) {
+            Alert.alert('Error', 'Ocurrió un error al eliminar el inmueble');
+          }
+        }},
+      ]
+    );
+  };
+
   return (
     <View key={inmueble.id_inmueble} style={styles.card}>
       <Text style={styles.title}>Titulo: {inmueble.titulo_inmueble}</Text>
@@ -13,6 +39,7 @@ export function InmuebleCard({inmueble}: InmuebleCardProps) {
       <Text style={styles.text}>
         Capacidad (personas): {inmueble.capacidad}
       </Text>
+      <Button title="Eliminar" color="red" onPress={handleDelete} />
     </View>
   );
 }

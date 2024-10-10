@@ -58,3 +58,19 @@ export async function createInmueble(inmueble: any) {
     throw error;
   }
 }
+
+export async function deleteInmueble(id: number) {
+  try {
+    const DELETE_URL = `http://10.0.2.2:3000/inmueble/delete/${id}`;
+    const response = await fetch(DELETE_URL, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': 'Bearer <acá va el token>',
+      },
+    });
+    return response;
+  } catch (error) {
+    console.error('Error eliminando el inmueble: ', error);
+    throw error;
+  }
+}

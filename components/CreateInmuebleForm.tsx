@@ -1,7 +1,14 @@
 import React, {useState} from 'react';
-import { Button, TextInput, View, Text, StyleSheet, Alert } from 'react-native';
-import { createInmueble } from '../inmuebles';
-import { create } from 'react-test-renderer';
+import {
+  Button,
+  TextInput,
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  Alert,
+} from 'react-native';
+import {createInmueble} from '../inmuebles';
 
 export function CreateInmuebleForm() {
   const [titulo, setTitulo] = useState('');
@@ -14,7 +21,16 @@ export function CreateInmuebleForm() {
   const [idPropietario, setIdPropietario] = useState('');
 
   const handleSubmit = async () => {
-    if (!titulo || !descripcion || !precioNoche || !direccion || !capacidad || !codPostal || !tipoInmueble || !idPropietario) {
+    if (
+      !titulo ||
+      !descripcion ||
+      !precioNoche ||
+      !direccion ||
+      !capacidad ||
+      !codPostal ||
+      !tipoInmueble ||
+      !idPropietario
+    ) {
       Alert.alert('Error', 'Todos los campos son obligatorios');
       return;
     }
@@ -25,8 +41,8 @@ export function CreateInmuebleForm() {
       precio_noche: parseFloat(precioNoche),
       direccion_inmueble: direccion,
       capacidad: parseInt(capacidad),
-      tipo_inmueble: { id_tipoinmueble: parseInt(tipoInmueble) },
-      localidad: { cod_postal: parseInt(codPostal) },
+      tipo_inmueble: {id_tipoinmueble: parseInt(tipoInmueble)},
+      localidad: {cod_postal: parseInt(codPostal)},
       propietario: parseInt(idPropietario),
     };
 
@@ -51,7 +67,7 @@ export function CreateInmuebleForm() {
   };
 
   return (
-    <View style={styles.form}>
+    <ScrollView style={styles.form}>
       <TextInput
         placeholder="Título del inmueble"
         value={titulo}
@@ -106,7 +122,7 @@ export function CreateInmuebleForm() {
         style={styles.input}
       />
       <Button title="Crear Inmueble" onPress={handleSubmit} />
-    </View>
+    </ScrollView>
   );
 }
 
@@ -120,5 +136,5 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 10,
     padding: 9,
-  }
+  },
 });
