@@ -1,26 +1,13 @@
 import React from 'react';
-import { StyleSheet, View} from 'react-native';
-import {Main} from './components/Main';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+import { RootNavigator } from './navigation/RootNavigator';
 
 export function App(): React.JSX.Element {
-  // Providers
   return (
     <SafeAreaProvider>
-        <View style={styles.scrollContent}>
-          <Main />
-        </View>
+      <RootNavigator />
     </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 12,
-  },
-  scrollContent: {
-    flexGrow: 1,
-  }
-});
 
 export default App;

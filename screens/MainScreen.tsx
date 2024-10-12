@@ -1,37 +1,27 @@
 import React, {useState, useEffect} from 'react';
 import {
   ActivityIndicator,
-  Alert,
   Button,
   FlatList,
   Modal,
   StyleSheet,
   View,
 } from 'react-native';
-import {getInmuebles} from '../inmuebles';
+import {getInmuebles} from '../services/inmuebleService';
 import {Inmueble} from '../interfaces/Inmueble.interface';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {InmuebleCard} from './InmuebleCard';
-import {CreateInmuebleForm} from './CreateInmuebleForm';
+import {InmuebleCard} from '../components/InmuebleCard';
+import { CreateInmuebleForm } from '../components/forms/CreateInmuebleForm';
+import { RootStackParamList } from '../navigation/RootNavigator';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-export function Main(): React.JSX.Element {
+type Props = NativeStackScreenProps<RootStackParamList, 'Main'>;
+
+export function MainScreen(): React.JSX.Element {
   const [inmuebles, setInmuebles] = useState<Inmueble[]>([]);
   const insets = useSafeAreaInsets();
   const [modalVisible, setModalVisible] = useState(false);
 
-  // useEffect(() => {
-  //   getInmuebles()
-  //     .then(inmuebles => {
-  //       if (inmuebles && inmuebles.length > 0) {
-  //         setInmuebles(inmuebles);
-  //       } else {
-  //         console.warn('No se encontraron inmuebles');
-  //       }
-  //     })
-  //     .catch(error => {
-  //       console.error('Error en el uso del hook useEffect: ', error);
-  //     });
-  // }, []);
   useEffect(() => {
     loadInmuebles();
   }, []);
@@ -46,8 +36,6 @@ export function Main(): React.JSX.Element {
   };
 
   return (
-    // Utiliza padding de insets para área segura para mostrar contenido
-    // Funciona tanto para Android como para iOS
     <View style={{paddingTop: insets.top, paddingBottom: insets.bottom}}>
       <Button title="Agregar inmueble" onPress={() => setModalVisible(true)} />
       <Modal

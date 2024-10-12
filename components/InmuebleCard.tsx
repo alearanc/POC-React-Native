@@ -1,6 +1,6 @@
 import {Alert, Button, StyleSheet, Text, View} from 'react-native';
 import {InmuebleCardProps} from '../interfaces/InmuebleCardProps.interface';
-import { deleteInmueble } from '../inmuebles';
+import { deleteInmueble } from '../services/inmuebleService';
 
 export function InmuebleCard({inmueble, reloadInmuebles}: InmuebleCardProps & {reloadInmuebles: () => void}) {
   const handleDelete = () => {
@@ -16,8 +16,6 @@ export function InmuebleCard({inmueble, reloadInmuebles}: InmuebleCardProps & {r
               Alert.alert('Éxito', 'Inmueble eliminado correctamente');
               reloadInmuebles();
             } else {
-              console.log(response);
-              console.log('-------SEPARATOR----------');
               Alert.alert('Error', 'No se pudo eliminar el inmueble');
             }
           } catch (error) {

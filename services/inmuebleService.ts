@@ -1,4 +1,4 @@
-import {Inmueble} from './interfaces/Inmueble.interface';
+import {Inmueble} from '../interfaces/Inmueble.interface';
 
 export async function getInmuebles() {
   try {
