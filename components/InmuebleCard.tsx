@@ -1,28 +1,37 @@
 import {Alert, Button, StyleSheet, Text, View} from 'react-native';
 import {InmuebleCardProps} from '../interfaces/InmuebleCardProps.interface';
-import { deleteInmueble } from '../services/inmuebleService';
+import {deleteInmueble} from '../services/inmuebleService';
 
-export function InmuebleCard({inmueble, reloadInmuebles}: InmuebleCardProps & {reloadInmuebles: () => void}) {
+export function InmuebleCard({
+  inmueble,
+  reloadInmuebles,
+}: InmuebleCardProps & {reloadInmuebles: () => void}) {
   const handleDelete = () => {
     Alert.alert(
       'Confirmar eliminación',
       '¿Estás seguro de que querés eliminar este inmueble?',
       [
         {text: 'Cancelar', style: 'cancel'},
-        {text: 'Eliminar', style: 'destructive', onPress: async () => {
-          try {
-            const response = await deleteInmueble(inmueble.id_inmueble);
-            if (response.ok) {
-              Alert.alert('Éxito', 'Inmueble eliminado correctamente');
-              reloadInmuebles();
-            } else {
-              Alert.alert('Error', 'No se pudo eliminar el inmueble');
+        {
+          text: 'Eliminar',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              const response = await deleteInmueble(inmueble.id_inmueble);
+              if (response.ok) {
+                Alert.alert('Éxito', 'Inmueble eliminado correctamente');
+                reloadInmuebles();
+              } else {
+                console.log(response);
+                Alert.alert('Error', 'No se pudo eliminar el inmueble');
+              }
+            } catch (error) {
+              console.log('Error: ', error);
+              Alert.alert('Error', `Ocurrió un error al eliminar el inmueble`);
             }
-          } catch (error) {
-            Alert.alert('Error', 'Ocurrió un error al eliminar el inmueble');
-          }
-        }},
-      ]
+          },
+        },
+      ],
     );
   };
 

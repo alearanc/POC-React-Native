@@ -1,4 +1,5 @@
 import {Inmueble} from '../interfaces/Inmueble.interface';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export async function getInmuebles() {
   try {
@@ -62,15 +63,26 @@ export async function createInmueble(inmueble: any) {
 export async function deleteInmueble(id: number) {
   try {
     const DELETE_URL = `http://10.0.2.2:3000/inmueble/delete/${id}`;
+
+    const tokenData = await AsyncStorage.getItem('authtoken');
+    const parsedTokenData = tokenData ? JSON.parse(tokenData) : null;
+    
+    if (!parsedTokenData || !parsedTokenData.token) throw new Error('Token de autenticación no encontrado');
+
+    const token = parsedTokenData.token;
+
     const response = await fetch(DELETE_URL, {
       method: 'DELETE',
       headers: {
-        'Authorization': 'Bearer <acá va el token>',
+        'authorization': `Bearer ${token}`,
       },
     });
+
     return response;
   } catch (error) {
     console.error('Error eliminando el inmueble: ', error);
     throw error;
+  } finally {
+    getInmuebles();
   }
 }

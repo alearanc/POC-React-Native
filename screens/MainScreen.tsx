@@ -1,39 +1,27 @@
 import React, {useState, useEffect} from 'react';
 import {
   ActivityIndicator,
+  Alert,
   Button,
   FlatList,
   Modal,
   StyleSheet,
   View,
 } from 'react-native';
-import {getInmuebles} from '../services/inmuebleService';
-import {Inmueble} from '../interfaces/Inmueble.interface';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {InmuebleCard} from '../components/InmuebleCard';
-import { CreateInmuebleForm } from '../components/forms/CreateInmuebleForm';
-import { RootStackParamList } from '../navigation/RootNavigator';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import {CreateInmuebleForm} from '../components/forms/CreateInmuebleForm';
+import {RootStackParamList} from '../navigation/RootNavigator';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {useInmuebles} from '../hooks/useInmuebles';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Main'>;
 
+
 export function MainScreen(): React.JSX.Element {
-  const [inmuebles, setInmuebles] = useState<Inmueble[]>([]);
   const insets = useSafeAreaInsets();
   const [modalVisible, setModalVisible] = useState(false);
-
-  useEffect(() => {
-    loadInmuebles();
-  }, []);
-
-  const loadInmuebles = async () => {
-    try {
-      const inmuebles = await getInmuebles();
-      setInmuebles(inmuebles);
-    } catch (error) {
-      console.error('Error cargando los inmuebles: ', error);
-    }
-  };
+  const {inmuebles, loading, setInmuebles} = useInmuebles();
 
   return (
     <View style={{paddingTop: insets.top, paddingBottom: insets.bottom}}>
@@ -51,16 +39,16 @@ export function MainScreen(): React.JSX.Element {
         </View>
       </Modal>
 
-      {inmuebles.length === 0 ? (
+      {loading ? (
         <ActivityIndicator color={'000'} size={'large'} />
+      ) : inmuebles.length === 0 ? (
+        <View>
+          <ActivityIndicator color={'000'} size={'large'} />
+        </View>
       ) : (
-        // Solo renderiza cuando está en el viewport
-        <FlatList
-          data={inmuebles}
-          keyExtractor={inmueble => inmueble.id_inmueble.toString()}
-          renderItem={({item}) => (
-            <InmuebleCard inmueble={item} reloadInmuebles={loadInmuebles} />
-          )}
+        <FlatList data={inmuebles} keyExtractor={inmueble => inmueble.id_inmueble.toString()} renderItem={({ item }) => (
+          <InmuebleCard inmueble={item} reloadInmuebles={() => setInmuebles([...inmuebles])} />
+        )}
         />
       )}
     </View>

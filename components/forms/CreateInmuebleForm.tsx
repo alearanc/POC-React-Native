@@ -2,13 +2,11 @@ import React, {useState} from 'react';
 import {
   Button,
   TextInput,
-  View,
-  Text,
   ScrollView,
   StyleSheet,
   Alert,
 } from 'react-native';
-import {createInmueble} from '../services/inmuebleService';
+import { createInmueble } from '../../services/inmuebleService';
 
 export function CreateInmuebleForm() {
   const [titulo, setTitulo] = useState('');
@@ -121,7 +119,7 @@ export function CreateInmuebleForm() {
         keyboardType="numeric"
         style={styles.input}
       />
-      {/* <Button title="Crear Inmueble" onPress={handleSubmit} /> */}
+      <Button title="Crear Inmueble" onPress={handleSubmit} />
     </ScrollView>
   );
 }
