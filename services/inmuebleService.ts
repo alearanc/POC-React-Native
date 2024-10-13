@@ -1,11 +1,13 @@
 import {Inmueble} from '../interfaces/Inmueble.interface';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const URL = 'http://10.0.2.2:3000/inmueble';
+
 export async function getInmuebles() {
   try {
-    const INMUEBLES = 'http://10.0.2.2:3000/inmueble/get/';
+    const GET_URL = `${URL}/get`;
 
-    const rawData = await fetch(INMUEBLES);
+    const rawData = await fetch(GET_URL);
     const inmuebles: Inmueble[] = await rawData.json();
 
     if (!Array.isArray(inmuebles)) {
@@ -45,8 +47,8 @@ export async function getInmuebles() {
 
 export async function createInmueble(inmueble: any) {
   try {
-    const INMUEBLES_URL = 'http://10.0.2.2:3000/inmueble/add/';
-    const response = await fetch(INMUEBLES_URL, {
+    const ADD_URL = `${URL}/add`;
+    const response = await fetch(ADD_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -62,7 +64,7 @@ export async function createInmueble(inmueble: any) {
 
 export async function deleteInmueble(id: number) {
   try {
-    const DELETE_URL = `http://10.0.2.2:3000/inmueble/delete/${id}`;
+    const DELETE_URL = `${URL}/delete/${id}`;
 
     const tokenData = await AsyncStorage.getItem('authtoken');
     const parsedTokenData = tokenData ? JSON.parse(tokenData) : null;

@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {
   ActivityIndicator,
-  Alert,
   Button,
   FlatList,
   Modal,
@@ -11,16 +10,12 @@ import {
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {InmuebleCard} from '../components/InmuebleCard';
 import {CreateInmuebleForm} from '../components/forms/CreateInmuebleForm';
-import {RootStackParamList} from '../navigation/RootNavigator';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useInmuebles} from '../hooks/useInmuebles';
-
-type Props = NativeStackScreenProps<RootStackParamList, 'Main'>;
 
 export function MainScreen(): React.JSX.Element {
   const insets = useSafeAreaInsets();
   const [modalVisible, setModalVisible] = useState(false);
-  const {inmuebles, loading, setInmuebles, loadInmuebles} = useInmuebles();
+  const {inmuebles, loading, loadInmuebles} = useInmuebles();
 
   return (
     <View style={{paddingTop: insets.top, paddingBottom: insets.bottom}}>
