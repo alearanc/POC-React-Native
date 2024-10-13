@@ -8,7 +8,11 @@ import {
 } from 'react-native';
 import { createInmueble } from '../../services/inmuebleService';
 
-export function CreateInmuebleForm() {
+type CreateInmuebleFormProps = {
+  onInmuebleCreated: () => void;
+};
+
+export function CreateInmuebleForm({ onInmuebleCreated }: CreateInmuebleFormProps) {
   const [titulo, setTitulo] = useState('');
   const [descripcion, setDescripcion] = useState('');
   const [precioNoche, setPrecioNoche] = useState('');
@@ -46,6 +50,7 @@ export function CreateInmuebleForm() {
 
     try {
       const response = await createInmueble(inmueble);
+      onInmuebleCreated();
       if (response.ok) {
         Alert.alert('Exito', 'Inmueble cargado correctamente');
         setTitulo('');

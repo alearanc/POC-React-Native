@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -17,11 +17,10 @@ import {useInmuebles} from '../hooks/useInmuebles';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Main'>;
 
-
 export function MainScreen(): React.JSX.Element {
   const insets = useSafeAreaInsets();
   const [modalVisible, setModalVisible] = useState(false);
-  const {inmuebles, loading, setInmuebles} = useInmuebles();
+  const {inmuebles, loading, setInmuebles, loadInmuebles} = useInmuebles();
 
   return (
     <View style={{paddingTop: insets.top, paddingBottom: insets.bottom}}>
@@ -33,8 +32,18 @@ export function MainScreen(): React.JSX.Element {
         onRequestClose={() => setModalVisible(false)}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <CreateInmuebleForm />
-            <Button title="Cerrar" onPress={() => setModalVisible(false)} />
+            <CreateInmuebleForm
+              onInmuebleCreated={() => {
+                setModalVisible(false);
+                loadInmuebles();
+              }}
+            />
+            <Button
+              title="Cerrar"
+              onPress={() => {
+                setModalVisible(false);
+              }}
+            />
           </View>
         </View>
       </Modal>
@@ -46,9 +55,12 @@ export function MainScreen(): React.JSX.Element {
           <ActivityIndicator color={'000'} size={'large'} />
         </View>
       ) : (
-        <FlatList data={inmuebles} keyExtractor={inmueble => inmueble.id_inmueble.toString()} renderItem={({ item }) => (
-          <InmuebleCard inmueble={item} reloadInmuebles={() => setInmuebles([...inmuebles])} />
-        )}
+        <FlatList
+          data={inmuebles}
+          keyExtractor={inmueble => inmueble.id_inmueble.toString()}
+          renderItem={({item}) => (
+            <InmuebleCard inmueble={item} reloadInmuebles={loadInmuebles} />
+          )}
         />
       )}
     </View>
