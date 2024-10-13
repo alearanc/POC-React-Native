@@ -2,8 +2,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {Alert, Button, SafeAreaView,StyleSheet, Text, TextInput, View} from 'react-native';
 import {useState} from 'react';
 import {LoginErrors} from '../interfaces/LoginErrors.interface';
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { login } from '../services/authService';
 import {RootStackParamList} from '../navigation/RootNavigator';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
@@ -30,31 +29,14 @@ export function LoginScreen({navigation}: Props): React.JSX.Element {
     setLoading(true);
 
     try {
-      const response = await axios.post(
-        'http://10.0.2.2:3000/persona/signin/',
-        {email, password},
-      );
-      const {token, user} = response.data;
-      const tokenString = JSON.stringify(token);
-      await AsyncStorage.setItem('authtoken', tokenString);
+      await login(email, password);
 
       setEmail('');
       setPassword('');
       setErrors({});
       navigation.replace('Main');
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        if (error.response && error.response.status === 401) {
-          Alert.alert('Error', 'Credenciales inválidas. Inténtelo de nuevo.');
-        } else {
-          Alert.alert(
-            'Error',
-            'Ha ocurrido un error. Intente nuevamente más tarde.',
-          );
-        }
-      } else {
-        Alert.alert('Error', 'Ocurrió un error inesperado');
-      }
+      Alert.alert('Error', (error as Error).message);
     } finally {
       setLoading(false);
     }
